@@ -1,0 +1,1 @@
+Project for the purpose of learning aspect based sentiment analysis -- eventually to be used in analyzying tweet data. 
