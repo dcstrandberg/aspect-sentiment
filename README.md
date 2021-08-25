@@ -3,6 +3,17 @@ Project for the purpose of learning aspect based sentiment analysis -- eventuall
 Link for spaCy module & documentation:
 https://spacy.io/usage/linguistic-features
 
+Note: In order to run these programs, you'll need to download the english & spanish language models that are used by spaCy, using the following commands:
+
+English:
+python -m spacy download en_core_web_sm
+
+Spanish:
+python -m spacy download es_core_news_sm
+
+
+----
+
 # TODOs:
  
 **./aspect-sentiment.py**
