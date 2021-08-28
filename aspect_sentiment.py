@@ -3,7 +3,7 @@ from textblob import TextBlob
 import pandas as pd
 
 # Import functions from other files
-from tweet_handlers import pullTweetsFromCSV
+from tweet_handlers import pullTweetsFromCSV, tweetPulls
 
 ### Declare functions to standardize, identify, and analyze input text
 # Will ultimately take in a list of tweets and return:
@@ -91,7 +91,9 @@ def extractTweetAttributes(nlp, tweet_df):
         'Keyword',
         'Spanish',
         'aspect',
-        'attribute'
+        'attribute',
+        'aspect_lemma',
+        'attribute_lemma'
     ])
 
     # Now create a set for the different keywords and spanish words
@@ -102,7 +104,7 @@ def extractTweetAttributes(nlp, tweet_df):
         spanishWord = tweet_df.loc[ tweet_df['Keyword'] == aKey ]['Spanish'].iloc[0]
 
         # And this is where we actually add the various analyses
-        ( aspectList , attributeList, aspectList_lemma, attributeList_lemma ) = extractDescriptors( nlp, tweet_df[ tweet_df['Keyword'] == aKey ]['Tweet'] )    
+        ( aspectList , attributeList, aspectList_lemma, attributeList_lemma ) = extractDescriptors( nlp, tweet_df[ tweet_df['Keyword'] == aKey ]['tweet'] )    
 
 
         # Now that we've got the data, create lookup lists for the Keyword & Spanish words
@@ -146,12 +148,20 @@ if __name__ == "__main__":
 
     # Pull in CSV files that hold all the tweets
     tweetFileList = [
-        './tweet_data/Fanta-Tweet-DB-08.10.2021.csv',
-        './tweet_data/Fruit-Tweet-DB-08.10.21.csv'
+        './tweet_data/tweet_db_08.27.2021.csv'
     ]
 
     # Create the DF of tweets from the CSV File
-    tweet_df = pullTweetsFromCSV( tweetFileList, fileEncoding='ANSI' )
+    tweet_df = pullTweetsFromCSV( tweetFileList )#, fileEncoding='ANSI' )
+
+    # Instead of pulling tweets from a file, we're going to get new tweets
+    # First we need to designate a list of english + spanish keywords to search for
+    keyword_df = pd.read_csv('./keyword_list.csv')
+
+    #tweet_df = tweetPulls( keyword_df )
+
+    #Save the tweet-df because of errors
+    #tweet_df.to_csv('./tweet_data/tweet_db_08.27.2021.csv')#, encoding='ANSI')
 
     # Run the tweets through the attribute extractor
     aspect_df = extractTweetAttributes ( nlp, tweet_df)
@@ -161,11 +171,4 @@ if __name__ == "__main__":
     count_df = countAttributes( aspect_df )
     #   - Not to mention run some sort of pronoun resolution
     
-    count_df.to_csv('./tweet_data/aspect_count_08.24.2021.csv', encoding='ANSI')
-
-    #Testing
-    #sentenceList = ['', '', 'It was an old, gross rag filled with green goo.']
-    #data = extractDescriptors(nlp, sentenceList)
-    #print(data)
-
-
+    count_df.to_csv('./tweet_data/aspect_count_08.27.2021.csv')
